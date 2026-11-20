@@ -1,0 +1,448 @@
+{
+  "claude-n8n": {
+    "scenario": "claude",
+    "twin": "n8n",
+    "models": {
+      "qualify": "claude-haiku-5-5",
+      "draft": "claude-sonnet-5-5"
+    },
+    "leads": 20,
+    "concurrency": 4,
+    "last_draft_s": 49.5,
+    "drafts": 10,
+    "median_to_draft_s": 31.4,
+    "p90_to_draft_s": 49.2,
+    "fit_agreement": "19/20",
+    "drafts_regenerated": 0,
+    "drafts_sent_to_review_flagged": 0,
+    "median_ack_s": 34.11,
+    "max_ack_s": 50.11,
+    "per_lead": {
+      "L01": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "to_draft_s": 15.2,
+        "price_issues": 0
+      },
+      "L02": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "to_draft_s": 15.9,
+        "price_issues": 0
+      },
+      "L03": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "to_draft_s": 16.7,
+        "price_issues": 0
+      },
+      "L04": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "to_draft_s": 16.9,
+        "price_issues": 0
+      },
+      "L05": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "to_draft_s": 34.0,
+        "price_issues": 0
+      },
+      "L06": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "to_draft_s": 46.8,
+        "price_issues": 0
+      },
+      "L07": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "to_draft_s": 34.5,
+        "price_issues": 0
+      },
+      "L08": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "to_draft_s": 29.1,
+        "price_issues": 0
+      },
+      "L09": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "to_draft_s": 33.7,
+        "price_issues": 0
+      },
+      "L10": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "to_draft_s": 49.5,
+        "price_issues": 0
+      },
+      "L11": {
+        "expected": "nurture",
+        "fit": "nurture",
+        "to_draft_s": null,
+        "price_issues": 0
+      },
+      "L12": {
+        "expected": "nurture",
+        "fit": "nurture",
+        "to_draft_s": null,
+        "price_issues": 0
+      },
+      "L13": {
+        "expected": "nurture",
+        "fit": "nurture",
+        "to_draft_s": null,
+        "price_issues": 0
+      },
+      "L14": {
+        "expected": "nurture",
+        "fit": "nurture",
+        "to_draft_s": null,
+        "price_issues": 0
+      },
+      "L15": {
+        "expected": "nurture",
+        "fit": "nurture",
+        "to_draft_s": null,
+        "price_issues": 0
+      },
+      "L16": {
+        "expected": "reject",
+        "fit": "reject_or_failed",
+        "to_draft_s": null,
+        "price_issues": 0
+      },
+      "L17": {
+        "expected": "reject",
+        "fit": "reject_or_failed",
+        "to_draft_s": null,
+        "price_issues": 0
+      },
+      "L18": {
+        "expected": "reject",
+        "fit": "reject_or_failed",
+        "to_draft_s": null,
+        "price_issues": 0
+      },
+      "L19": {
+        "expected": "reject",
+        "fit": "reject_or_failed",
+        "to_draft_s": null,
+        "price_issues": 0
+      },
+      "L20": {
+        "expected": "reject",
+        "fit": "nurture",
+        "to_draft_s": null,
+        "price_issues": 0
+      }
+    }
+  },
+  "claude-python": {
+    "scenario": "claude",
+    "twin": "python",
+    "models": {
+      "qualify": "claude-haiku-5-5",
+      "draft": "claude-sonnet-5-5"
+    },
+    "leads": 20,
+    "concurrency": 4,
+    "last_draft_s": 42.5,
+    "drafts": 10,
+    "median_to_draft_s": 26.0,
+    "p90_to_draft_s": 42.1,
+    "fit_agreement": "19/20",
+    "drafts_regenerated": 0,
+    "drafts_sent_to_review_flagged": 0,
+    "median_ack_s": 0.21,
+    "max_ack_s": 0.22,
+    "per_lead": {
+      "L01": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 16.5,
+        "price_issues": 0,
+        "llm_calls": 2,
+        "input_tokens": 3114,
+        "output_tokens": 858
+      },
+      "L02": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 13.4,
+        "price_issues": 0,
+        "llm_calls": 2,
+        "input_tokens": 3034,
+        "output_tokens": 1022
+      },
+      "L03": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 11.6,
+        "price_issues": 0,
+        "llm_calls": 2,
+        "input_tokens": 3055,
+        "output_tokens": 833
+      },
+      "L04": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 24.8,
+        "price_issues": 0,
+        "llm_calls": 2,
+        "input_tokens": 3011,
+        "output_tokens": 674
+      },
+      "L05": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 21.8,
+        "price_issues": 0,
+        "llm_calls": 2,
+        "input_tokens": 3140,
+        "output_tokens": 869
+      },
+      "L06": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 29.8,
+        "price_issues": 0,
+        "llm_calls": 2,
+        "input_tokens": 3155,
+        "output_tokens": 1213
+      },
+      "L07": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 27.1,
+        "price_issues": 0,
+        "llm_calls": 2,
+        "input_tokens": 2950,
+        "output_tokens": 754
+      },
+      "L08": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 36.2,
+        "price_issues": 0,
+        "llm_calls": 2,
+        "input_tokens": 3051,
+        "output_tokens": 776
+      },
+      "L09": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 38.2,
+        "price_issues": 0,
+        "llm_calls": 2,
+        "input_tokens": 3002,
+        "output_tokens": 1284
+      },
+      "L10": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 42.5,
+        "price_issues": 0,
+        "llm_calls": 2,
+        "input_tokens": 3053,
+        "output_tokens": 798
+      },
+      "L11": {
+        "expected": "nurture",
+        "fit": "nurture",
+        "status": "nurture",
+        "to_draft_s": null,
+        "price_issues": 0,
+        "llm_calls": 1,
+        "input_tokens": 1460,
+        "output_tokens": 158
+      },
+      "L12": {
+        "expected": "nurture",
+        "fit": "nurture",
+        "status": "nurture",
+        "to_draft_s": null,
+        "price_issues": 0,
+        "llm_calls": 1,
+        "input_tokens": 1447,
+        "output_tokens": 154
+      },
+      "L13": {
+        "expected": "nurture",
+        "fit": "nurture",
+        "status": "nurture",
+        "to_draft_s": null,
+        "price_issues": 0,
+        "llm_calls": 1,
+        "input_tokens": 1455,
+        "output_tokens": 182
+      },
+      "L14": {
+        "expected": "nurture",
+        "fit": "nurture",
+        "status": "nurture",
+        "to_draft_s": null,
+        "price_issues": 0,
+        "llm_calls": 1,
+        "input_tokens": 1451,
+        "output_tokens": 204
+      },
+      "L15": {
+        "expected": "nurture",
+        "fit": "nurture",
+        "status": "nurture",
+        "to_draft_s": null,
+        "price_issues": 0,
+        "llm_calls": 1,
+        "input_tokens": 1433,
+        "output_tokens": 188
+      },
+      "L16": {
+        "expected": "reject",
+        "fit": "reject",
+        "status": "disqualified",
+        "to_draft_s": null,
+        "price_issues": 0,
+        "llm_calls": 1,
+        "input_tokens": 1451,
+        "output_tokens": 193
+      },
+      "L17": {
+        "expected": "reject",
+        "fit": "reject",
+        "status": "disqualified",
+        "to_draft_s": null,
+        "price_issues": 0,
+        "llm_calls": 1,
+        "input_tokens": 1444,
+        "output_tokens": 123
+      },
+      "L18": {
+        "expected": "reject",
+        "fit": "reject",
+        "status": "disqualified",
+        "to_draft_s": null,
+        "price_issues": 0,
+        "llm_calls": 1,
+        "input_tokens": 1453,
+        "output_tokens": 245
+      },
+      "L19": {
+        "expected": "reject",
+        "fit": "reject",
+        "status": "disqualified",
+        "to_draft_s": null,
+        "price_issues": 0,
+        "llm_calls": 1,
+        "input_tokens": 1465,
+        "output_tokens": 248
+      },
+      "L20": {
+        "expected": "reject",
+        "fit": "nurture",
+        "status": "nurture",
+        "to_draft_s": null,
+        "price_issues": 0,
+        "llm_calls": 1,
+        "input_tokens": 1429,
+        "output_tokens": 176
+      }
+    }
+  },
+  "dupes-n8n": {
+    "scenario": "dupes",
+    "twin": "n8n",
+    "leads": 25,
+    "resent": 20,
+    "concurrent_doubles": 5,
+    "fault_ratio": 0.0,
+    "hubspot_calls": 175,
+    "injected_429s": 0,
+    "complete_leads": 25,
+    "duplicate_contacts": 0,
+    "duplicate_deals": 0
+  },
+  "dupes-python": {
+    "scenario": "dupes",
+    "twin": "python",
+    "leads": 25,
+    "resent": 20,
+    "concurrent_doubles": 5,
+    "fault_ratio": 0.0,
+    "hubspot_calls": 97,
+    "injected_429s": 0,
+    "complete_leads": 25,
+    "duplicate_contacts": 0,
+    "duplicate_deals": 0,
+    "ledger_rows": 25,
+    "ledger_failed": 0
+  },
+  "ratelimit-30-n8n": {
+    "scenario": "ratelimit",
+    "twin": "n8n",
+    "leads": 20,
+    "resent": 0,
+    "concurrent_doubles": 0,
+    "fault_ratio": 0.3,
+    "hubspot_calls": 127,
+    "injected_429s": 43,
+    "complete_leads": 19,
+    "duplicate_contacts": 0,
+    "duplicate_deals": 0
+  },
+  "ratelimit-30-python": {
+    "scenario": "ratelimit",
+    "twin": "python",
+    "leads": 20,
+    "resent": 0,
+    "concurrent_doubles": 0,
+    "fault_ratio": 0.3,
+    "hubspot_calls": 111,
+    "injected_429s": 38,
+    "complete_leads": 20,
+    "duplicate_contacts": 0,
+    "duplicate_deals": 0,
+    "ledger_rows": 20,
+    "ledger_failed": 0
+  },
+  "ratelimit-60-n8n": {
+    "scenario": "ratelimit",
+    "twin": "n8n",
+    "leads": 20,
+    "resent": 0,
+    "concurrent_doubles": 0,
+    "fault_ratio": 0.6,
+    "hubspot_calls": 134,
+    "injected_429s": 91,
+    "complete_leads": 8,
+    "duplicate_contacts": 0,
+    "duplicate_deals": 0
+  },
+  "ratelimit-60-python": {
+    "scenario": "ratelimit",
+    "twin": "python",
+    "leads": 20,
+    "resent": 0,
+    "concurrent_doubles": 0,
+    "fault_ratio": 0.6,
+    "hubspot_calls": 203,
+    "injected_429s": 131,
+    "complete_leads": 20,
+    "duplicate_contacts": 0,
+    "duplicate_deals": 0,
+    "ledger_rows": 20,
+    "ledger_failed": 0
+  }
+}

@@ -24,7 +24,7 @@ Edit `QUALIFY_SYSTEM` / `DRAFT_SYSTEM` / `RATE_CARD` in `src/lead_to_proposal/ag
 `bench/run.py claude` for both twins and compare `fit_agreement` with the previous results.
 
 ## Known behaviours
-- Haiku put the printing enquiry (L20) in `nurture` rather than `reject` in every Claude run. It does
+- Haiku put the printing enquiry (L20) in `nurture` rather than `reject` in the recorded run of both twins. It does
   no harm: no deal is created and a person sees it.
 - The rate-card check allows any figure the client mentioned. A draft could repeat a client's
   figure in a misleading way; review catches that, the check does not.
