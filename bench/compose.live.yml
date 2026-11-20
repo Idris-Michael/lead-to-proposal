@@ -1,0 +1,17 @@
+# Live run: the Python service against a real HubSpot portal (a developer test account), with
+# Claude through the host LLM proxy. HUBSPOT_TOKEN comes from your .env and never from this file.
+#   docker compose -f docker-compose.yml -f bench/compose.live.yml up -d --scale worker=4 api worker
+x-live-env: &live-env
+  HUBSPOT_MODE: live
+  HUBSPOT_BASE_URL: https://api.hubapi.com
+  HUBSPOT_TOKEN: ${HUBSPOT_TOKEN:?set HUBSPOT_TOKEN in .env}
+  LLM_MODE: proxy
+  QUALIFY_MODEL: ${QUALIFY_MODEL:-claude-haiku-5-5}
+  DRAFT_MODEL: ${DRAFT_MODEL:-claude-sonnet-5-5}
+  RATE_LIMIT_PER_MINUTE: "1000"
+
+services:
+  api:
+    environment: *live-env
+  worker:
+    environment: *live-env

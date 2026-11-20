@@ -28,8 +28,15 @@ machine. For real Claude: run `uv run ltp-llm-proxy` on the host and set `LLM_MO
 ## Connecting a HubSpot developer test account
 1. In a HubSpot developer account, create a test account, then a private app with the scopes in
    the security questionnaire.
+   Create the private app inside the test account, not the developer account. The developer account's
+   API key looks similar (`eu1-…`) but only manages apps: as a bearer token it gets 401, and as
+   `hapikey` it gets 403 on every CRM call. A private app token starts with `pat-`.
 2. Set `HUBSPOT_MODE=live` and `HUBSPOT_TOKEN`. On start the worker creates the custom properties
    `ltp_lead_key` (deals, unique), `ltp_score` and `ltp_fit` (contacts).
+3. To repeat the live benchmark: start the model proxy, then
+   `docker compose -f docker-compose.yml -f bench/compose.live.yml up -d --scale worker=4 api worker`
+   and `uv run python bench/live.py`. It reads every record back from HubSpot and checks it against
+   the ledger.
 
 ## Day-to-day
 | Symptom | Check | Fix |

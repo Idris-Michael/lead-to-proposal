@@ -389,6 +389,357 @@
     "ledger_rows": 25,
     "ledger_failed": 0
   },
+  "live-python": {
+    "scenario": "live",
+    "twin": "python",
+    "hubspot": "developer test account, CRM v3/v4 API, EU data hosting",
+    "measured_at": "2026-11-20T14:34:46+00:00",
+    "models": {
+      "qualify": "claude-haiku-5-5",
+      "draft": "claude-sonnet-5-5"
+    },
+    "leads": 20,
+    "concurrency": 4,
+    "fit_agreement": "20/20",
+    "drafts": 10,
+    "median_to_draft_s": 26.9,
+    "p90_to_draft_s": 44.8,
+    "median_ack_s": 0.22,
+    "resent": 20,
+    "concurrent_doubles": 5,
+    "hubspot_matches_ledger": "25/25",
+    "duplicate_deals": 0,
+    "ledger_failed": 0,
+    "hubspot_retries_logged": 0,
+    "verification_calls": 95,
+    "per_lead": {
+      "L01": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 13.0,
+        "hubspot": {
+          "contact": true,
+          "deals": 1,
+          "deal_notes": 1,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L02": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 13.9,
+        "hubspot": {
+          "contact": true,
+          "deals": 1,
+          "deal_notes": 1,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L03": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 12.2,
+        "hubspot": {
+          "contact": true,
+          "deals": 1,
+          "deal_notes": 1,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L04": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 16.8,
+        "hubspot": {
+          "contact": true,
+          "deals": 1,
+          "deal_notes": 1,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L05": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 34.3,
+        "hubspot": {
+          "contact": true,
+          "deals": 1,
+          "deal_notes": 1,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L06": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 29.0,
+        "hubspot": {
+          "contact": true,
+          "deals": 1,
+          "deal_notes": 1,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L07": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 29.9,
+        "hubspot": {
+          "contact": true,
+          "deals": 1,
+          "deal_notes": 1,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L08": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 24.9,
+        "hubspot": {
+          "contact": true,
+          "deals": 1,
+          "deal_notes": 1,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L09": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 37.1,
+        "hubspot": {
+          "contact": true,
+          "deals": 1,
+          "deal_notes": 1,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L10": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": 45.6,
+        "hubspot": {
+          "contact": true,
+          "deals": 1,
+          "deal_notes": 1,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L11": {
+        "expected": "nurture",
+        "fit": "nurture",
+        "status": "nurture",
+        "to_draft_s": null,
+        "hubspot": {
+          "contact": true,
+          "deals": 0,
+          "deal_notes": 0,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L12": {
+        "expected": "nurture",
+        "fit": "nurture",
+        "status": "nurture",
+        "to_draft_s": null,
+        "hubspot": {
+          "contact": true,
+          "deals": 0,
+          "deal_notes": 0,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L13": {
+        "expected": "nurture",
+        "fit": "nurture",
+        "status": "nurture",
+        "to_draft_s": null,
+        "hubspot": {
+          "contact": true,
+          "deals": 0,
+          "deal_notes": 0,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L14": {
+        "expected": "nurture",
+        "fit": "nurture",
+        "status": "nurture",
+        "to_draft_s": null,
+        "hubspot": {
+          "contact": true,
+          "deals": 0,
+          "deal_notes": 0,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L15": {
+        "expected": "nurture",
+        "fit": "nurture",
+        "status": "nurture",
+        "to_draft_s": null,
+        "hubspot": {
+          "contact": true,
+          "deals": 0,
+          "deal_notes": 0,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L16": {
+        "expected": "reject",
+        "fit": "reject",
+        "status": "disqualified",
+        "to_draft_s": null,
+        "hubspot": {
+          "contact": false,
+          "deals": 0,
+          "deal_notes": 0,
+          "contact_notes": 0
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L17": {
+        "expected": "reject",
+        "fit": "reject",
+        "status": "disqualified",
+        "to_draft_s": null,
+        "hubspot": {
+          "contact": false,
+          "deals": 0,
+          "deal_notes": 0,
+          "contact_notes": 0
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L18": {
+        "expected": "reject",
+        "fit": "reject",
+        "status": "disqualified",
+        "to_draft_s": null,
+        "hubspot": {
+          "contact": false,
+          "deals": 0,
+          "deal_notes": 0,
+          "contact_notes": 0
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L19": {
+        "expected": "reject",
+        "fit": "reject",
+        "status": "disqualified",
+        "to_draft_s": null,
+        "hubspot": {
+          "contact": false,
+          "deals": 0,
+          "deal_notes": 0,
+          "contact_notes": 0
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L20": {
+        "expected": "reject",
+        "fit": "reject",
+        "status": "disqualified",
+        "to_draft_s": null,
+        "hubspot": {
+          "contact": false,
+          "deals": 0,
+          "deal_notes": 0,
+          "contact_notes": 0
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L01x": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": null,
+        "hubspot": {
+          "contact": true,
+          "deals": 1,
+          "deal_notes": 1,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L02x": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": null,
+        "hubspot": {
+          "contact": true,
+          "deals": 1,
+          "deal_notes": 1,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L03x": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": null,
+        "hubspot": {
+          "contact": true,
+          "deals": 1,
+          "deal_notes": 1,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L04x": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": null,
+        "hubspot": {
+          "contact": true,
+          "deals": 1,
+          "deal_notes": 1,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      },
+      "L05x": {
+        "expected": "qualified",
+        "fit": "qualified",
+        "status": "awaiting_approval",
+        "to_draft_s": null,
+        "hubspot": {
+          "contact": true,
+          "deals": 1,
+          "deal_notes": 1,
+          "contact_notes": 1
+        },
+        "hubspot_matches_ledger": true
+      }
+    }
+  },
   "ratelimit-30-n8n": {
     "scenario": "ratelimit",
     "twin": "n8n",

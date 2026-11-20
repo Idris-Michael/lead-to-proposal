@@ -11,7 +11,8 @@
 ## What is not done
 | Item | Why it matters | Suggested next step |
 |---|---|---|
-| Live HubSpot run | Pilot used a faithful fake over HTTP; the client code targets the real v3 API | Connect a developer test account (runbook) and re-run the benchmark |
+| n8n twin against real HubSpot | The Python service ran live (20/20, records match the ledger); the n8n twin only ran against the fake | Point `N8N_HUBSPOT_BASE_URL` at the real API with a private app credential and re-run |
+| Real 429s | The live run needed no retries at this volume; 429 handling is proven only against injected faults | Run a larger burst against the test account and compare retry counts |
 | Production model adapter | `claude -p` is a pilot workaround (ADR 5) | Add a Messages API / Bedrock / Azure adapter behind the `LLM` protocol |
 | SSO on the console | One shared operator token | Put the console behind Entra ID / Okta at the ingress |
 | Retention and deletion | Leads are kept indefinitely | Scheduled prune; a delete-by-email endpoint for data subject requests |

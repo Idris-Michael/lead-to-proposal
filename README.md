@@ -29,13 +29,20 @@ and four-way parallelism. Drills use an offline model so only the orchestration 
 | HubSpot calls for that drill | **97** | 175 | Fake HubSpot over HTTP |
 | 30% of HubSpot calls answered 429 | **20/20** done | 19/20 done | Fake HubSpot over HTTP |
 | 60% of HubSpot calls answered 429 | **20/20** done | 8/20 done | Fake HubSpot over HTTP |
-| Live HubSpot portal | not yet run | not yet run | Client targets CRM v3; [runbook](docs/engagement/runbook.md) |
+| Real HubSpot portal: 20 leads, then the duplicate drill | **20/20** verdicts agree; **25/25** leads' records match the ledger; 0 duplicate deals; 0 retries needed; draft median 26.9 s | not run | Live HubSpot test account |
 | Azure / AWS deployment | Terraform validated, tflint and checkov clean | | Validated offline, not deployed |
 
-In the recorded run both versions put one lead (a printing enquiry) in *nurture* instead of
-*reject*, and neither wrote anything to HubSpot for the prompt-injection lead. Verdicts vary between
-runs: in one demo take Haiku put the injection lead in *nurture* (score 25, injection noted and
-ignored, so a contact and note but no deal). That variation is why every draft still goes to a person.
+In the recorded fake-server run both versions put one lead (a printing enquiry) in *nurture* instead
+of *reject*, and neither wrote anything to HubSpot for the prompt-injection lead. Verdicts vary between
+runs: the live run rejected the printing enquiry (20/20), and in one demo take Haiku put the
+injection lead in *nurture* (score 25, injection noted and ignored, so a contact and note but no
+deal). That variation is why every draft still goes to a person.
+
+The live run ([`bench/live.py`](bench/live.py)) sent the 20 leads to a HubSpot developer test account,
+then replayed the batch and sent five new leads twice at once. It then read every record back from
+HubSpot's API: a contact, exactly one deal with the lead key and a note for each qualified lead; a
+contact and note but no deal for each nurture lead; nothing for each reject. The n8n twin has not been
+run against a real portal.
 Why the twins differ, and what would close the gap on the n8n side, is in
 [ADR 1](docs/adr/0001-low-code-vs-code.md).
 
@@ -119,7 +126,8 @@ docs/                   engagement brief, security questionnaire, runbook, hando
 ## Evidence labels
 **Measured locally**: run on a Windows laptop with Docker Desktop; the model calls went to Anthropic
 through `claude -p`. **Fake HubSpot over HTTP**: the CRM v3 endpoints this service uses, served by
-`ltp-fake-hubspot` with fault injection. **Validated offline**: Terraform checked, never applied.
+`ltp-fake-hubspot` with fault injection. **Live HubSpot test account**: a free HubSpot developer test
+portal (EU hosting) through a private app token, records checked through HubSpot's own API. **Validated offline**: Terraform checked, never applied.
 
 ## Licence
 MIT
