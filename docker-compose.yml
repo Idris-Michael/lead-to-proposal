@@ -59,7 +59,7 @@ services:
     healthcheck: { disable: true }
 
   n8n:
-    image: n8nio/n8n:2.21.5
+    image: n8nio/n8n:2.48.4
     profiles: [n8n]
     ports: ["5678:5678"]
     environment:
