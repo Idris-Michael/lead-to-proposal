@@ -48,7 +48,7 @@ services:
     healthcheck: { disable: true }
 
   jaeger:
-    image: jaegertracing/jaeger:2.11.0
+    image: jaegertracing/jaeger:2.23.0
     ports: ["16686:16686"]  # UI; OTLP (4318) stays on the compose network
 
   fake-hubspot:
