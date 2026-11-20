@@ -7,6 +7,7 @@ from __future__ import annotations
 import json
 import random
 import threading
+import time
 from dataclasses import dataclass, field
 from typing import Any
 
@@ -72,7 +73,7 @@ class FakeHubSpot:
 
     def _create(self, store: dict[str, dict[str, Any]], body: dict[str, Any]) -> httpx.Response:
         rid = self._id()
-        store[rid] = {"id": rid, **body}
+        store[rid] = {"id": rid, "created_at": time.time(), **body}
         return httpx.Response(201, json={"id": rid, "properties": body.get("properties", {})})
 
     def _create_property(self, obj: str, body: dict[str, Any]) -> httpx.Response:

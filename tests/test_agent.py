@@ -81,3 +81,21 @@ def test_offline_llm_produces_valid_verdicts_and_drafts() -> None:
     assert agent.qualify(llm, spam, model="m")[0].fit is Fit.REJECT
     _, issues, _ = agent.draft_proposal(llm, good, q, model="m")
     assert issues == []
+
+
+def test_client_figures_echoed_back_are_not_flagged() -> None:
+    """Regression from the first benchmark: drafts that repeated the client's own revenue and
+    budget ("£40k a month", "£3-4k") were treated as invented prices and regenerated."""
+    lead = LeadIn(**lead_payload(message="Store doing about £40k a month, budget is £3-4k.", budget_gbp=3500))
+    q, _ = agent.qualify(ScriptedLLM(verdict()), lead, model="m")
+    draft = "You turn over £40k a month and mentioned £3-4k (about £3,500). Sprint: £6,500 + VAT."
+    _, issues, result = agent.draft_proposal(ScriptedLLM(draft), lead, q, model="m")
+    assert issues == [] and len(result.calls) == 1
+
+
+def test_k_suffix_is_parsed_and_new_figures_still_flagged() -> None:
+    assert agent.money_figures("£40k, £1.5k, £6,500 and £ 250") == {40000, 1500, 6500, 250}
+    lead = LeadIn(**lead_payload(budget_gbp=8000))
+    q, _ = agent.qualify(ScriptedLLM(verdict()), lead, model="m")
+    _, issues, _ = agent.draft_proposal(ScriptedLLM("£7,800 inc VAT", "£7,800 inc VAT"), lead, q, model="m")
+    assert issues == ["£7,800 is not on the rate card"]

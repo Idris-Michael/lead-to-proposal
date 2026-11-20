@@ -102,7 +102,7 @@ const [title, price] = CARD[ctx.q.service_line];
 const fmt = '£' + price.toLocaleString('en-GB');
 const prompt = `${ctx.lead_block}\n<qualification>\n${JSON.stringify(ctx.q)}\n</qualification>\n` +
   `<rate_card>\nPACKAGE: ${title} | ${fmt} + VAT\n</rate_card>`;
-return { json: { ...ctx, price, draft_request: { system: __DRAFT__, prompt, model: 'claude-sonnet-5-5' } } };
+return { json: { ...ctx, price, draft_request: { system: __DRAFT__, prompt, model: $env.DRAFT_MODEL || 'claude-sonnet-5-5' } } };
 """
     )
     .replace("__CARD__", json.dumps({k: list(v) for k, v in RATE_CARD.items()}))
@@ -110,10 +110,14 @@ return { json: { ...ctx, price, draft_request: { system: __DRAFT__, prompt, mode
 )
 
 PRICE_JS = r"""
+// Same rule as agent.allowed_figures: card price plus figures the client gave us; "£40k" = 40,000.
 const ctx = $('Draft prompt').item.json;
 const text = ($json.text || '').trim();
-const figures = [...text.matchAll(/£\s?(\d[\d,]*)/g)].map((m) => parseInt(m[1].replace(/,/g, ''), 10));
-const issues = figures.filter((n) => n !== ctx.price).map((n) => `£${n} is not on the rate card`);
+const money = (s) => [...String(s).matchAll(/£\s?(\d[\d,]*(?:\.\d+)?)\s?([kK])?/g)]
+  .map((m) => Math.round(parseFloat(m[1].replace(/,/g, '')) * (m[2] ? 1000 : 1)));
+const allowed = new Set([ctx.price, ...money(ctx.lead.message)]);
+if (ctx.lead.budget_gbp != null) allowed.add(ctx.lead.budget_gbp);
+const issues = [...new Set(money(text))].filter((n) => !allowed.has(n)).map((n) => `£${n} is not on the rate card`);
 const flag = issues.length ? `PRICE CHECK: ${issues.join('; ')}\n\n` : '';
 return { json: { ...ctx, issues, drafted_ms: Date.now() - ctx.received_at,
   note: { properties: { hs_note_body: flag + 'PROPOSAL DRAFT (needs review)\n\n' + text, hs_timestamp: new Date().toISOString() },
@@ -195,7 +199,7 @@ def proxy_body(system: str) -> str:
     return (
         "={{ JSON.stringify({ system: "
         + json.dumps(system)
-        + ", prompt: $json.lead_block, model: 'claude-haiku-5-5' }) }}"
+        + ", prompt: $json.lead_block, model: $env.QUALIFY_MODEL || 'claude-haiku-5-5' }) }}"
     )
 
 

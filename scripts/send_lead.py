@@ -16,9 +16,13 @@ import httpx
 
 from lead_to_proposal.signing import sign
 
+# One pooled client: building a client per request costs ~1.5 s each under a 20-thread burst,
+# which would be measured as the service's response time.
+_CLIENT = httpx.Client()
+
 
 def send(
-    url: str, secret: str, lead: dict[str, object], idempotency_key: str | None = None
+    url: str, secret: str, lead: dict[str, object], idempotency_key: str | None = None, timeout: float = 30
 ) -> httpx.Response:
     body = json.dumps(lead).encode()
     ts = int(time.time())
@@ -29,7 +33,7 @@ def send(
     }
     if idempotency_key:
         headers["idempotency-key"] = idempotency_key
-    return httpx.post(url, content=body, headers=headers, timeout=30)
+    return _CLIENT.post(url, content=body, headers=headers, timeout=timeout)
 
 
 def main() -> None:

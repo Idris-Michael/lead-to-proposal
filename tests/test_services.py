@@ -62,8 +62,11 @@ def test_proxy_maps_model_errors_to_502() -> None:
             raise LLMError("usage limit")
 
     c = TestClient(llm_proxy.create_app(Broken(), TOKEN))  # type: ignore[arg-type]
-    body = {"system": "s", "prompt": "p", "model": "offline"}
-    assert c.post("/v1/complete", json=body, headers={"authorization": f"Bearer {TOKEN}"}).status_code == 502
+    auth = {"authorization": f"Bearer {TOKEN}"}
+    body = {"system": "s", "prompt": "p", "model": "claude-haiku-5-5"}
+    assert c.post("/v1/complete", json=body, headers=auth).status_code == 502
+    # "offline" never reaches the real model, so drills cannot spend model calls by accident.
+    assert c.post("/v1/complete", json={**body, "model": "offline"}, headers=auth).status_code == 200
 
 
 def test_fake_hubspot_server_counts_and_injects(lead: LeadIn, qualified: Qualification) -> None:

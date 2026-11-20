@@ -116,8 +116,25 @@ def apply_policy(lead: LeadIn, q: Qualification, result: StepResult) -> Qualific
     return q
 
 
+MONEY = re.compile(r"£\s?(\d[\d,]*(?:\.\d+)?)\s?([kK])?")
+
+
 def money_figures(text: str) -> set[int]:
-    return {int(m.replace(",", "")) for m in re.findall(r"£\s?(\d[\d,]*)", text)}
+    """Every £ amount in `text`, with "£40k" read as 40,000."""
+    out = set()
+    for num, k in MONEY.findall(text):
+        value = float(num.replace(",", ""))
+        out.add(round(value * 1000 if k else value))
+    return out
+
+
+def allowed_figures(lead: LeadIn, price: int) -> set[int]:
+    """The card price, plus figures the client gave us: repeating their own budget or revenue
+    back to them is not an invented price (the first benchmark run flagged exactly that)."""
+    allowed = {price} | money_figures(lead.message)
+    if lead.budget_gbp is not None:
+        allowed.add(lead.budget_gbp)
+    return allowed
 
 
 def draft_proposal(
@@ -136,7 +153,7 @@ def draft_proposal(
         c = llm.complete(DRAFT_SYSTEM, prompt, model=model)
         result.calls.append(c)
         text = c.text.strip()
-        unknown = sorted(money_figures(text) - {price})
+        unknown = sorted(money_figures(text) - allowed_figures(lead, price))
         issues = [f"£{n:,} is not on the rate card" for n in unknown]
         if not issues:
             break

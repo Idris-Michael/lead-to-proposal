@@ -24,6 +24,7 @@ def create_app(llm: LLM, token: str) -> FastAPI:
     if len(token) < 24:
         raise ValueError("LLM_PROXY_TOKEN must be at least 24 characters")
     app = FastAPI(title="ltp-llm-proxy", version="0.1.0")
+    offline = OfflineLLM()
 
     @app.post("/v1/complete")
     def complete(
@@ -34,7 +35,9 @@ def create_app(llm: LLM, token: str) -> FastAPI:
         if body.model not in ALLOWED_MODELS:
             raise HTTPException(400, f"model not allowed: {body.model}")
         try:
-            c = llm.complete(body.system, body.prompt, model=body.model)
+            # "offline" is always the keyword stand-in, so drills never spend real model calls.
+            engine = offline if body.model == "offline" else llm
+            c = engine.complete(body.system, body.prompt, model=body.model)
         except LLMError as e:
             raise HTTPException(502, str(e)) from e
         return {

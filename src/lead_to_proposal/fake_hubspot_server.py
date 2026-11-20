@@ -2,6 +2,7 @@
 `/_fake/*` endpoints let the benchmark read record counts, set fault ratios and reset state."""
 
 import os
+import time
 
 import httpx
 from fastapi import FastAPI, Request, Response
@@ -30,10 +31,27 @@ def create_app() -> FastAPI:
             "deals": len(f.deals),
             "notes": len(f.notes),
             "duplicate_contacts": len(emails) - len(set(emails)),
+            "contact_emails": emails,
             "calls": f.calls,
             "injected_faults": f.injected,
             "deal_keys": keys,
+            "deals_detail": [
+                {"id": d["id"], "key": d["properties"].get("ltp_lead_key"), "created_at": d["created_at"]}
+                for d in f.deals.values()
+            ],
+            "draft_notes": [
+                {
+                    "created_at": n["created_at"],
+                    "deal_ids": [a["to"]["id"] for a in n.get("associations", [])],
+                }
+                for n in f.notes.values()
+                if str(n["properties"].get("hs_note_body", "")).startswith(("PROPOSAL DRAFT", "PRICE CHECK"))
+            ],
         }
+
+    @app.get("/_fake/time")
+    def fake_time() -> dict[str, float]:
+        return {"now": time.time()}
 
     @app.post("/_fake/reset")
     def reset(cfg: FaultConfig) -> dict[str, str]:

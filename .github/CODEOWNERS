@@ -1,0 +1,7 @@
+# Prompts, guardrails, CRM writes and signing change what reaches customers and HubSpot.
+*                                   @Idris-Michael
+/src/lead_to_proposal/agent.py      @Idris-Michael
+/src/lead_to_proposal/hubspot.py    @Idris-Michael
+/src/lead_to_proposal/signing.py    @Idris-Michael
+/n8n/                               @Idris-Michael
+/infra/                             @Idris-Michael

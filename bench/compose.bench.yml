@@ -1,0 +1,19 @@
+# Benchmark wiring: both twins talk to the same fake HubSpot server and the same host LLM proxy.
+#   docker compose -f docker-compose.yml -f bench/compose.bench.yml --profile bench --profile n8n up -d --scale worker=4
+x-bench-env: &bench-env
+  HUBSPOT_MODE: live
+  HUBSPOT_BASE_URL: http://fake-hubspot:8091
+  HUBSPOT_TOKEN: mock-token
+  LLM_MODE: proxy
+  QUALIFY_MODEL: ${QUALIFY_MODEL:-claude-haiku-5-5}
+  DRAFT_MODEL: ${DRAFT_MODEL:-claude-sonnet-5-5}
+  RATE_LIMIT_PER_MINUTE: "1000"
+
+services:
+  api:
+    environment: *bench-env
+  worker:
+    environment: *bench-env
+    depends_on:
+      fake-hubspot:
+        condition: service_started

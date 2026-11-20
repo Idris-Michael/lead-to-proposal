@@ -7,12 +7,13 @@ import threading
 import time
 from collections import defaultdict, deque
 from collections.abc import Callable, Iterator
-from importlib import resources
+from importlib import resources  # nosemgrep: python37-compatibility-importlib2 -- requires Python 3.12
 from statistics import median
 from typing import Annotated, Any, Literal
 
 import structlog
 from fastapi import Depends, FastAPI, Header, HTTPException, Request
+from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import HTMLResponse, JSONResponse
 from pydantic import BaseModel, Field, ValidationError
 from sqlalchemy import func, select
@@ -127,7 +128,8 @@ def create_app(settings: Settings, session_factory: Callable[[], Session] | None
                 else "bad json"
             )
             raise HTTPException(422, detail) from e
-        row, created = insert_lead(s, lead, idempotency_key)
+        # Sync DB work off the event loop, so a burst of submissions is not serialised.
+        row, created = await run_in_threadpool(insert_lead, s, lead, idempotency_key)
         log.info("lead_received", lead_id=row.id, duplicate=not created)
         return JSONResponse(
             {"id": row.id, "status": row.status, "duplicate": not created},

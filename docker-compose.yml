@@ -73,6 +73,9 @@ services:
       LLM_PROXY_TOKEN: ${LLM_PROXY_TOKEN}
       HUBSPOT_BASE_URL: ${N8N_HUBSPOT_BASE_URL:-http://fake-hubspot:8091}
       HUBSPOT_TOKEN: ${HUBSPOT_TOKEN:-mock-token}
+      QUALIFY_MODEL: ${QUALIFY_MODEL:-claude-haiku-5-5}
+      DRAFT_MODEL: ${DRAFT_MODEL:-claude-sonnet-5-5}
+      N8N_CONCURRENCY_PRODUCTION_LIMIT: "4"  # same parallelism as the four Python workers in the benchmark
     extra_hosts:
       - "host.docker.internal:host-gateway"
     volumes:
