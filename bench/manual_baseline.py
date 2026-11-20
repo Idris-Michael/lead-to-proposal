@@ -34,7 +34,7 @@ def main() -> None:
     p.add_argument("--who", default="operator", help="role of the person timed, e.g. 'sales lead'")
     a = p.parse_args()
     leads = {r["id"]: r for r in json.loads((HERE / "leads.json").read_text("utf-8"))}
-    print(__doc__.split("The job, per lead")[1])
+    print("The job, per lead" + __doc__.split("The job, per lead")[1])
     print("Rate card:")
     for line, (title, price) in RATE_CARD.items():
         print(f"  {line:<11} {title}: £{price:,} + VAT")
