@@ -25,6 +25,8 @@ dependencies = [
 [project.scripts]
 ltp-api = "lead_to_proposal.api:main"
 ltp-worker = "lead_to_proposal.worker:main"
+ltp-llm-proxy = "lead_to_proposal.llm_proxy:main"
+ltp-fake-hubspot = "lead_to_proposal.fake_hubspot_server:main"
 
 [build-system]
 requires = ["uv_build>=0.11.24,<0.12.0"]

@@ -18,7 +18,7 @@ from .config import Settings
 from .db import Lead, add_event, claim_next, make_engine, now
 from .hubspot import HubSpotClient
 from .hubspot_fake import FakeHubSpot
-from .llm import LLM, ClaudeCli, OfflineLLM
+from .llm import LLM, ClaudeCli, HttpLLM, OfflineLLM
 from .models import LeadStatus
 
 log = structlog.get_logger(__name__)
@@ -29,13 +29,19 @@ def build_deps(
     settings: Settings, sessions: Callable[[], Session], fake: FakeHubSpot | None = None
 ) -> pipeline.Deps:
     if settings.hubspot_mode == "live":
-        hubspot = HubSpotClient(settings.hubspot_token.get_secret_value())
+        hubspot = HubSpotClient(settings.hubspot_token.get_secret_value(), base_url=settings.hubspot_base_url)
     else:
         fake = fake or FakeHubSpot(rate_limit_ratio=settings.hubspot_fake_429_ratio)
         hubspot = HubSpotClient(
             "mock-token", base_url="https://fake.hubapi.local", transport=fake.transport()
         )
-    llm: LLM = OfflineLLM() if settings.llm_mode == "offline" else ClaudeCli(settings.claude_cli_path)
+    llm: LLM
+    if settings.llm_mode == "offline":
+        llm = OfflineLLM()
+    elif settings.llm_mode == "proxy":
+        llm = HttpLLM(settings.llm_proxy_url, settings.llm_proxy_token.get_secret_value())
+    else:
+        llm = ClaudeCli(settings.claude_cli_path)
     return pipeline.Deps(
         llm=llm,
         hubspot=hubspot,

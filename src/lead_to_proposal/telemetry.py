@@ -23,6 +23,7 @@ def _add_trace_ids(_logger: WrappedLogger, _method: str, event: EventDict) -> Ev
 
 def setup(service_name: str, otlp_endpoint: str | None) -> None:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
+    logging.getLogger("httpx").setLevel(logging.WARNING)  # request lines are already in traces
     structlog.configure(
         processors=[
             structlog.contextvars.merge_contextvars,

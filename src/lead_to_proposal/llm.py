@@ -11,6 +11,8 @@ import time
 from dataclasses import dataclass
 from typing import Protocol
 
+import httpx
+
 
 @dataclass(frozen=True)
 class Completion:
@@ -87,6 +89,30 @@ class ClaudeCli:
             + int(usage.get("cache_read_input_tokens", 0)),
             output_tokens=int(usage.get("output_tokens", 0)),
         )
+
+
+class HttpLLM:
+    """Calls the LLM proxy (`ltp-llm-proxy`). Lets containers and the n8n twin use the same model
+    as the host without holding its credentials."""
+
+    name = "proxy"
+
+    def __init__(self, base_url: str, token: str, *, transport: httpx.BaseTransport | None = None) -> None:
+        self._http = httpx.Client(
+            base_url=base_url,
+            transport=transport,
+            timeout=200.0,
+            headers={"authorization": f"Bearer {token}"},
+        )
+
+    def complete(self, system: str, prompt: str, *, model: str) -> Completion:
+        try:
+            res = self._http.post("/v1/complete", json={"system": system, "prompt": prompt, "model": model})
+        except httpx.HTTPError as e:
+            raise LLMError(f"llm proxy unreachable: {e}") from e
+        if res.status_code != 200:
+            raise LLMError(f"llm proxy {res.status_code}: {res.text[:200]}")
+        return Completion(**res.json())
 
 
 class OfflineLLM:

@@ -18,9 +18,12 @@ class Settings(BaseSettings):
 
     hubspot_mode: Literal["mock", "live"] = "mock"
     hubspot_token: SecretStr = SecretStr("")
+    hubspot_base_url: str = "https://api.hubapi.com"
     hubspot_fake_429_ratio: float = Field(default=0.0, ge=0, le=0.9)
 
-    llm_mode: Literal["claude_cli", "offline"] = "claude_cli"
+    llm_mode: Literal["claude_cli", "proxy", "offline"] = "claude_cli"
+    llm_proxy_url: str = "http://localhost:8090"
+    llm_proxy_token: SecretStr = SecretStr("")
     claude_cli_path: str | None = None
     qualify_model: str = "claude-haiku-5-5"
     draft_model: str = "claude-sonnet-5-5"
@@ -42,6 +45,8 @@ class Settings(BaseSettings):
     def check_mode_secrets(self) -> Settings:
         if self.hubspot_mode == "live" and not self.hubspot_token.get_secret_value():
             raise ValueError("HUBSPOT_MODE=live needs HUBSPOT_TOKEN")
+        if self.llm_mode == "proxy" and not self.llm_proxy_token.get_secret_value():
+            raise ValueError("LLM_MODE=proxy needs LLM_PROXY_TOKEN")
         if self.approval_mode == "gateway" and not (
             self.gateway_agent_key.get_secret_value() and self.gateway_callback_secret.get_secret_value()
         ):

@@ -1,0 +1,83 @@
+# docker compose up                          API + worker + Postgres + Jaeger (offline model unless .env says otherwise)
+# docker compose --profile bench up           adds the fake HubSpot over HTTP for the drills
+# docker compose --profile n8n up             adds the n8n twin
+name: lead-to-proposal
+
+x-app: &app
+  build: .
+  image: lead-to-proposal:local
+  env_file: .env
+  environment: &app-env
+    DATABASE_URL: postgresql+psycopg://ltp:ltp@postgres:5432/ltp
+    OTEL_EXPORTER_OTLP_ENDPOINT: http://jaeger:4318
+  extra_hosts:
+    - "host.docker.internal:host-gateway"  # reach the host's LLM proxy on Linux too
+  depends_on:
+    migrate:
+      condition: service_completed_successfully
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: ltp
+      POSTGRES_PASSWORD: ltp  # local only; deployed environments read it from Key Vault / Secrets Manager
+      POSTGRES_DB: ltp
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ltp"]
+      interval: 3s
+      retries: 20
+    volumes: [pgdata:/var/lib/postgresql/data]
+
+  migrate:
+    <<: *app
+    command: ["alembic", "upgrade", "head"]
+    healthcheck: { disable: true }
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    <<: *app
+    command: ["ltp-api"]
+    ports: ["${API_PORT:-8080}:8080"]
+
+  worker:
+    <<: *app
+    command: ["ltp-worker"]
+    healthcheck: { disable: true }
+
+  jaeger:
+    image: jaegertracing/jaeger:2.11.0
+    ports: ["16686:16686"]  # UI; OTLP (4318) stays on the compose network
+
+  fake-hubspot:
+    <<: *app
+    profiles: [bench]
+    command: ["ltp-fake-hubspot"]
+    ports: ["8091:8091"]
+    healthcheck: { disable: true }
+
+  n8n:
+    image: n8nio/n8n:2.21.5
+    profiles: [n8n]
+    ports: ["5678:5678"]
+    environment:
+      N8N_DIAGNOSTICS_ENABLED: "false"
+      N8N_PERSONALIZATION_ENABLED: "false"
+      NODE_FUNCTION_ALLOW_BUILTIN: crypto  # the Code node verifies the webhook HMAC
+      N8N_BLOCK_ENV_ACCESS_IN_NODE: "false"
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET}
+      LLM_PROXY_URL: http://host.docker.internal:8090
+      LLM_PROXY_TOKEN: ${LLM_PROXY_TOKEN}
+      HUBSPOT_BASE_URL: ${N8N_HUBSPOT_BASE_URL:-http://fake-hubspot:8091}
+      HUBSPOT_TOKEN: ${HUBSPOT_TOKEN:-mock-token}
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    volumes:
+      - n8ndata:/home/node/.n8n
+      - ./n8n:/workflows:ro
+
+volumes:
+  pgdata:
+  n8ndata:
