@@ -28,3 +28,7 @@ Edit `QUALIFY_SYSTEM` / `DRAFT_SYSTEM` / `RATE_CARD` in `src/lead_to_proposal/ag
   no harm: no deal is created and a person sees it.
 - The rate-card check allows any figure the client mentioned. A draft could repeat a client's
   figure in a misleading way; review catches that, the check does not.
+- Verdicts vary between runs at the margins. In one demo take Haiku put the prompt-injection lead
+  (L19) in `nurture` with score 25 rather than `reject`, while noting the injected instruction and
+  ignoring it. No deal was created, but a contact and note were. Re-run the labelled set after any
+  prompt change and look at the spread, not one run.

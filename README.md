@@ -7,7 +7,9 @@ approves it. Built twice, as a Python service and as an n8n workflow generated f
 prompts, then benchmarked against each other on the same 20 leads, a duplicate drill and an
 HTTP 429 drill.
 
-![Lead Desk operator console](docs/console.png)
+![48-second live run: six enquiries qualified and drafted by Claude, one approved, the prompt-injection lead rejected](docs/demo.gif)
+
+<sub>A live run in real time (48 s): Claude Haiku and Sonnet through `claude -p`, HubSpot played by the fake server.</sub>
 
 > Framed as a pilot for a **fictional** 15-person UK digital agency ([brief](docs/engagement/brief.md)).
 > The code, tests and measurements are real; the leads are synthetic.
@@ -30,9 +32,15 @@ and four-way parallelism. Drills use an offline model so only the orchestration 
 | Live HubSpot portal | not yet run | not yet run | Client targets CRM v3; [runbook](docs/engagement/runbook.md) |
 | Azure / AWS deployment | Terraform validated, tflint and checkov clean | | Validated offline, not deployed |
 
-Both versions put one lead (a printing enquiry) in *nurture* instead of *reject*, and neither wrote
-anything to HubSpot for the prompt-injection lead. Why the twins differ, and what would close the
-gap on the n8n side, is in [ADR 1](docs/adr/0001-low-code-vs-code.md).
+In the recorded run both versions put one lead (a printing enquiry) in *nurture* instead of
+*reject*, and neither wrote anything to HubSpot for the prompt-injection lead. Verdicts vary between
+runs: in one demo take Haiku put the injection lead in *nurture* (score 25, injection noted and
+ignored, so a contact and note but no deal). That variation is why every draft still goes to a person.
+Why the twins differ, and what would close the gap on the n8n side, is in
+[ADR 1](docs/adr/0001-low-code-vs-code.md).
+
+**Manual baseline: not measured yet.** `bench/manual_baseline.py` times a person doing the same job
+by hand in HubSpot; no hand-timing figure appears here until someone has run it.
 
 ## How it works
 
@@ -85,6 +93,8 @@ export $(grep -v '^#' .env | xargs)
 uv run python scripts/send_lead.py bench/leads.json --index 0
 open http://localhost:8080        # console; traces at http://localhost:16686
 ```
+
+![Lead Desk operator console](docs/console.png)
 
 Nothing leaves the machine with the defaults. To use Claude, run `uv run ltp-llm-proxy` on the host
 and set `LLM_MODE=proxy`. For a HubSpot developer test account, set `HUBSPOT_MODE=live` and
