@@ -1,0 +1,62 @@
+[project]
+name = "lead-to-proposal"
+version = "0.1.0"
+description = "Inbound lead to qualified HubSpot deal to approved proposal draft, with idempotent CRM writes and rate-limit handling."
+readme = "README.md"
+authors = [{ name = "Idris-Michael Bakare" }]
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = [
+    "alembic>=1.20.1",
+    "fastapi>=0.165.0",
+    "httpx>=0.28.1",
+    "langgraph>=1.2.24",
+    "opentelemetry-exporter-otlp-proto-http>=1.45.2",
+    "opentelemetry-instrumentation-fastapi>=0.66b2",
+    "opentelemetry-sdk>=1.45.2",
+    "psycopg[binary]>=3.3.9",
+    "pydantic-settings>=2.16.3",
+    "pydantic[email]>=2.14.4",
+    "sqlalchemy>=2.1.9",
+    "structlog>=26.1.0",
+    "uvicorn[standard]>=0.54.0",
+]
+
+[project.scripts]
+ltp-api = "lead_to_proposal.api:main"
+ltp-worker = "lead_to_proposal.worker:main"
+
+[build-system]
+requires = ["uv_build>=0.11.24,<0.12.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "mypy>=2.4.1",
+    "pytest>=9.2.0",
+    "pytest-cov>=7.1.0",
+    "ruff>=0.17.6",
+    "testcontainers[postgres]>=4.15.0",
+]
+
+[tool.ruff]
+line-length = 110
+target-version = "py312"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "S", "SIM", "RUF"]
+ignore = ["S101"]  # assert is how pytest checks
+
+[tool.mypy]
+strict = true
+packages = ["lead_to_proposal"]
+plugins = ["pydantic.mypy"]
+
+[[tool.mypy.overrides]]
+module = ["langgraph.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "--cov=lead_to_proposal --cov-report=term-missing --cov-fail-under=80"
+markers = ["integration: needs Docker (testcontainers Postgres)"]
