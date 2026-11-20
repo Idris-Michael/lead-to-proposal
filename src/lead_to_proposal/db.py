@@ -111,7 +111,9 @@ def claim_next(s: Session, lease_s: int = 300) -> Lead | None:
         .where(
             or_(
                 Lead.status == LeadStatus.RECEIVED.value,
-                (Lead.status == LeadStatus.PROCESSING.value) & (Lead.locked_until < t),
+                # A processing row with no lease is orphaned, so it counts as expired.
+                (Lead.status == LeadStatus.PROCESSING.value)
+                & (Lead.locked_until.is_(None) | (Lead.locked_until < t)),
             )
         )
         .order_by(Lead.received_at)

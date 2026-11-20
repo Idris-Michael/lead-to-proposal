@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lead Desk</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --paper: #f6f3ec; --panel: #fffdf8; --ink: #1d1b16; --muted: #6b6558; --rule: #e2dccd;
+  --accent: #1f5c4a; --accent-ink: #f3faf6; --warn: #9a4b0f; --warn-bg: #fbeedd;
+  --bad: #8f2a2a; --chip: #ece7da; --focus: #2e7d65;
+  --q: #1f5c4a; --n: #7a6a1d; --r: #8f2a2a;
+  --sans: "Instrument Sans", system-ui, sans-serif; --mono: "JetBrains Mono", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root { --paper: #15140f; --panel: #1d1c16; --ink: #ece7da; --muted: #a39c8b; --rule: #33302a;
+    --accent: #6fc3a5; --accent-ink: #0e1f19; --warn: #f0a868; --warn-bg: #2d2114; --bad: #e88b8b;
+    --chip: #2a2822; --focus: #8fd8bd; --q: #6fc3a5; --n: #d8c56a; --r: #e88b8b; }
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 var(--sans); }
+button, input { font: inherit; }
+:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+header { display: flex; align-items: baseline; gap: 24px; padding: 20px 28px 12px; border-bottom: 1px solid var(--rule); flex-wrap: wrap; }
+h1 { font-size: 22px; letter-spacing: -0.02em; margin: 0; }
+h1 small { font-weight: 400; color: var(--muted); font-size: 14px; margin-left: 8px; }
+.stats { display: flex; gap: 28px; margin-left: auto; flex-wrap: wrap; }
+.stat b { display: block; font: 600 22px/1.1 var(--mono); }
+.stat span { font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.06em; }
+main { display: grid; grid-template-columns: minmax(280px, 380px) 1fr; min-height: calc(100vh - 80px); }
+@media (max-width: 820px) { main { grid-template-columns: 1fr; } }
+nav { border-right: 1px solid var(--rule); overflow-y: auto; max-height: calc(100vh - 80px); }
+.filters { display: flex; gap: 6px; padding: 12px 16px; flex-wrap: wrap; position: sticky; top: 0; background: var(--paper); border-bottom: 1px solid var(--rule); }
+.filters button { border: 1px solid var(--rule); background: transparent; color: var(--muted); border-radius: 999px; padding: 3px 11px; cursor: pointer; font-size: 13px; }
+.filters button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+ul.queue { list-style: none; margin: 0; padding: 0; }
+.queue button { display: grid; grid-template-columns: 1fr auto; gap: 2px 12px; width: 100%; text-align: left; padding: 12px 16px; border: 0; border-bottom: 1px solid var(--rule); background: transparent; color: inherit; cursor: pointer; }
+.queue button:hover { background: var(--panel); }
+.queue button[aria-current="true"] { background: var(--panel); box-shadow: inset 3px 0 0 var(--accent); }
+.co { font-weight: 600; }
+.meta { grid-column: 1 / -1; font-size: 12px; color: var(--muted); display: flex; gap: 8px; align-items: center; }
+.score { font: 500 13px var(--mono); }
+.bar { height: 3px; background: var(--chip); border-radius: 2px; grid-column: 1 / -1; overflow: hidden; }
+.bar i { display: block; height: 100%; background: var(--accent); }
+.chip { font-size: 11px; padding: 1px 8px; border-radius: 999px; background: var(--chip); text-transform: uppercase; letter-spacing: 0.05em; }
+.chip.awaiting_approval { background: var(--accent); color: var(--accent-ink); }
+.chip.failed, .chip.disqualified { color: var(--bad); }
+section.detail { padding: 28px 36px 60px; max-width: 980px; }
+.empty { color: var(--muted); padding: 60px 36px; }
+.title-row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+.title-row h2 { margin: 0; font-size: 28px; letter-spacing: -0.02em; }
+.fit { font: 600 12px var(--mono); text-transform: uppercase; letter-spacing: 0.08em; }
+.fit.qualified { color: var(--q); } .fit.nurture { color: var(--n); } .fit.reject { color: var(--r); }
+.grid { display: grid; grid-template-columns: 1.15fr 1fr; gap: 28px; margin-top: 22px; }
+@media (max-width: 1100px) { .grid { grid-template-columns: 1fr; } }
+.card { background: var(--panel); border: 1px solid var(--rule); border-radius: 10px; padding: 18px 20px; }
+.card h3 { margin: 0 0 10px; font-size: 12px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+.message { white-space: pre-wrap; margin: 0; }
+dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 0; font-size: 14px; }
+dt { color: var(--muted); } dd { margin: 0; font-family: var(--mono); font-size: 13px; overflow-wrap: anywhere; }
+.proposal { font-size: 15px; } .proposal h1, .proposal h2, .proposal h3 { font-size: 16px; margin: 18px 0 6px; }
+.proposal h1:first-child, .proposal h2:first-child { margin-top: 0; }
+.proposal p { margin: 0 0 10px; } .proposal ul { margin: 0 0 10px; padding-left: 20px; }
+.warn { background: var(--warn-bg); color: var(--warn); border-radius: 8px; padding: 10px 14px; margin-bottom: 14px; font-size: 14px; }
+.actions { display: flex; gap: 10px; margin-top: 16px; align-items: center; flex-wrap: wrap; }
+.btn { border-radius: 8px; padding: 9px 18px; cursor: pointer; border: 1px solid var(--ink); background: var(--ink); color: var(--paper); font-weight: 600; }
+.btn.ghost { background: transparent; color: var(--ink); }
+.btn:active { transform: translateY(1px); }
+.btn:disabled { opacity: 0.45; cursor: default; }
+ol.timeline { list-style: none; margin: 0; padding: 0; font-size: 13px; }
+.timeline li { display: grid; grid-template-columns: 74px 1fr; gap: 10px; padding: 5px 0; border-bottom: 1px dashed var(--rule); }
+.timeline time { font-family: var(--mono); color: var(--muted); }
+.timeline .k { font-weight: 600; } .timeline .d { color: var(--muted); font-family: var(--mono); font-size: 12px; overflow-wrap: anywhere; }
+.reasons { margin: 0; padding-left: 18px; } .flags { color: var(--bad); }
+.login { max-width: 420px; margin: 12vh auto; padding: 0 20px; }
+.login input { width: 100%; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--rule); background: var(--panel); color: var(--ink); margin: 10px 0 12px; }
+.status-line { font-size: 13px; color: var(--muted); }
+</style>
+</head>
+<body>
+<div id="login" class="login" hidden>
+  <h1>Lead Desk</h1>
+  <p class="status-line">Enter the operator token to review leads. It is kept for this tab only.</p>
+  <form id="login-form">
+    <label for="token">Operator token</label>
+    <input id="token" type="password" autocomplete="off" required>
+    <button class="btn" type="submit">Open</button>
+  </form>
+</div>
+<div id="app" hidden>
+  <header>
+    <h1>Lead Desk <small>inbound leads → HubSpot → proposal review</small></h1>
+    <div class="stats" aria-live="polite">
+      <div class="stat"><b id="s-total">–</b><span>Leads</span></div>
+      <div class="stat"><b id="s-await">–</b><span>Awaiting review</span></div>
+      <div class="stat"><b id="s-approved">–</b><span>Approved</span></div>
+      <div class="stat"><b id="s-median">–</b><span>Median to draft</span></div>
+    </div>
+  </header>
+  <main>
+    <nav aria-label="Lead queue">
+      <div class="filters" role="group" aria-label="Filter by status"></div>
+      <ul class="queue" id="queue"></ul>
+    </nav>
+    <section class="detail" id="detail" aria-live="polite"><p class="empty">Select a lead.</p></section>
+  </main>
+</div>
+<script>
+"use strict";
+// Lead fields are untrusted input: everything is rendered with textContent, never innerHTML.
+const FILTERS = [["all", "All"], ["awaiting_approval", "To review"], ["approved", "Approved"],
+  ["nurture", "Nurture"], ["disqualified", "Rejected"], ["failed", "Failed"]];
+let token = sessionStorage.getItem("ltp-token") || "";
+let filter = "awaiting_approval";
+let selected = null;
+
+const $ = (id) => document.getElementById(id);
+function el(tag, attrs = {}, ...kids) {
+  const n = document.createElement(tag);
+  for (const [k, v] of Object.entries(attrs)) {
+    if (k === "class") n.className = v; else if (k.startsWith("on")) n.addEventListener(k.slice(2), v); else n.setAttribute(k, v);
+  }
+  for (const k of kids) if (k != null) n.append(k instanceof Node ? k : String(k));
+  return n;
+}
+async function api(path, opts = {}) {
+  const res = await fetch(path, { ...opts, headers: { "authorization": `Bearer ${token}`, "content-type": "application/json" } });
+  if (res.status === 401) { sessionStorage.removeItem("ltp-token"); token = ""; show(); throw new Error("unauthorised"); }
+  if (!res.ok) throw new Error((await res.json().catch(() => ({}))).detail || res.statusText);
+  return res.json();
+}
+const label = (s) => s.replaceAll("_", " ");
+const hhmm = (iso) => new Date(iso).toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
+
+function renderMarkdown(md) {
+  // Headings, bullets and paragraphs only; bold markers are dropped, not interpreted.
+  const out = el("div", { class: "proposal" });
+  let list = null;
+  for (const raw of md.split("\n")) {
+    const line = raw.replaceAll("**", "").trimEnd();
+    const h = line.match(/^(#{1,3})\s+(.*)$/);
+    const li = line.match(/^\s*[-*]\s+(.*)$/);
+    if (li) { if (!list) { list = el("ul"); out.append(list); } list.append(el("li", {}, li[1])); continue; }
+    list = null;
+    if (h) out.append(el(`h${h[1].length}`, {}, h[2]));
+    else if (line.trim()) out.append(el("p", {}, line));
+  }
+  return out;
+}
+
+async function loadStats() {
+  const s = await api("/v1/stats");
+  const total = Object.values(s.by_status).reduce((a, b) => a + b, 0);
+  $("s-total").textContent = total;
+  $("s-await").textContent = s.by_status.awaiting_approval || 0;
+  $("s-approved").textContent = s.by_status.approved || 0;
+  $("s-median").textContent = s.median_webhook_to_draft_s == null ? "–" : `${s.median_webhook_to_draft_s}s`;
+}
+
+async function loadQueue() {
+  const rows = await api(filter === "all" ? "/v1/leads" : `/v1/leads?status=${filter}`);
+  const q = $("queue");
+  q.replaceChildren(...rows.map((r) => el("li", {},
+    el("button", { "aria-current": String(r.id === selected), onclick: () => select(r.id) },
+      el("span", { class: "co" }, r.company),
+      el("span", { class: "score" }, r.score == null ? "…" : r.score),
+      el("span", { class: "bar", "aria-hidden": "true" }, el("i", { style: `width:${r.score || 0}%` })),
+      el("span", { class: "meta" }, el("span", { class: `chip ${r.status}` }, label(r.status)),
+        r.service_line ? label(r.service_line) : "", r.price_issues ? "· price check" : "")))));
+  if (!rows.length) q.append(el("li", { class: "empty" }, "Nothing here."));
+}
+
+async function select(id) {
+  selected = id;
+  const d = await api(`/v1/leads/${id}`);
+  const q = d.qualification || {};
+  const lead = d.lead;
+  const actions = el("div", { class: "actions" });
+  if (d.status === "awaiting_approval") {
+    const note = el("input", { type: "text", "aria-label": "Reviewer note", placeholder: "Note (optional)", maxlength: "500",
+      style: "flex:1;min-width:180px;padding:9px 12px;border-radius:8px;border:1px solid var(--rule);background:var(--panel);color:var(--ink)" });
+    const decide = async (decision) => {
+      actions.querySelectorAll("button").forEach((b) => (b.disabled = true));
+      try { await api(`/v1/leads/${id}/decision`, { method: "POST", body: JSON.stringify({ decision, note: note.value || null }) }); }
+      catch (e) { alert(e.message); }
+      await refresh();
+    };
+    actions.append(el("button", { class: "btn", onclick: () => decide("approve") }, "Approve and send"),
+      el("button", { class: "btn ghost", onclick: () => decide("reject") }, "Reject"), note);
+  } else if (d.status === "failed") {
+    actions.append(el("button", { class: "btn", onclick: async () => { await api(`/v1/leads/${id}/retry`, { method: "POST" }); await refresh(); } }, "Retry"));
+  }
+  const proposal = el("div", { class: "card" }, el("h3", {}, "Proposal draft"));
+  if (d.price_issues.length) proposal.append(el("div", { class: "warn", role: "alert" }, `Price check: ${d.price_issues.join("; ")}`));
+  proposal.append(d.proposal_md ? renderMarkdown(d.proposal_md) : el("p", { class: "status-line" }, d.status === "processing" ? "Drafting…" : "No draft for this lead."), actions);
+  if (d.error) proposal.append(el("div", { class: "warn" }, `Last error (attempt ${d.attempts}): ${d.error}`));
+
+  $("detail").replaceChildren(
+    el("div", { class: "title-row" }, el("h2", {}, d.company),
+      q.fit ? el("span", { class: `fit ${q.fit}` }, `${q.fit} · ${q.score}/100`) : null,
+      el("span", { class: `chip ${d.status}` }, label(d.status))),
+    el("p", { class: "status-line" }, `${lead.name} · ${d.email}${lead.budget_gbp ? ` · stated budget £${Number(lead.budget_gbp).toLocaleString("en-GB")}` : ""}`),
+    el("div", { class: "grid" },
+      el("div", {}, proposal),
+      el("div", { style: "display:grid;gap:20px;align-content:start" },
+        el("div", { class: "card" }, el("h3", {}, "Their message"), el("p", { class: "message" }, lead.message)),
+        q.reasons ? el("div", { class: "card" }, el("h3", {}, "Why this verdict"),
+          el("ul", { class: "reasons" }, ...q.reasons.map((r) => el("li", {}, r)), ...(q.red_flags || []).map((r) => el("li", { class: "flags" }, r)))) : null,
+        el("div", { class: "card" }, el("h3", {}, "HubSpot"), el("dl", {},
+          el("dt", {}, "Contact"), el("dd", {}, d.hubspot.contact_id || "–"),
+          el("dt", {}, "Deal"), el("dd", {}, d.hubspot.deal_id || "–"),
+          el("dt", {}, "Note"), el("dd", {}, d.hubspot.note_id || "–"),
+          el("dt", {}, "Approval"), el("dd", {}, d.approval_ref || "local"))),
+        el("div", { class: "card" }, el("h3", {}, "Timeline"), el("ol", { class: "timeline" },
+          ...d.events.map((e) => el("li", {}, el("time", { datetime: e.at }, hhmm(e.at)),
+            el("div", {}, el("span", { class: "k" }, label(e.kind)), " ",
+              el("span", { class: "d" }, Object.keys(e.detail || {}).length ? JSON.stringify(e.detail) : "")))))))));
+  await loadQueue();
+}
+
+async function refresh() {
+  await Promise.all([loadStats(), loadQueue()]);
+  if (selected) await select(selected);
+}
+
+function show() {
+  $("login").hidden = !!token;
+  $("app").hidden = !token;
+  if (token) refresh().catch(() => {});
+}
+
+$("login-form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  token = $("token").value.trim();
+  sessionStorage.setItem("ltp-token", token);
+  show();
+});
+document.querySelector(".filters").append(...FILTERS.map(([key, text]) => el("button", {
+  "aria-pressed": String(key === filter),
+  onclick: (ev) => { filter = key; document.querySelectorAll(".filters button").forEach((b) => b.setAttribute("aria-pressed", String(b === ev.currentTarget))); loadQueue(); },
+}, text)));
+setInterval(() => { if (token && !document.hidden) loadStats().then(loadQueue).catch(() => {}); }, 4000);
+show();
+</script>
+</body>
+</html>

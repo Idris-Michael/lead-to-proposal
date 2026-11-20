@@ -60,3 +60,6 @@ ignore_missing_imports = true
 testpaths = ["tests"]
 addopts = "--cov=lead_to_proposal --cov-report=term-missing --cov-fail-under=80"
 markers = ["integration: needs Docker (testcontainers Postgres)"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S105", "S106", "S107"]  # test fixtures use literal secrets
